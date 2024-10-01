@@ -31,11 +31,19 @@ namespace Cyrus.Mql5
         [return: MarshalAs(UnmanagedType.LPTStr)]
         public static string Get([In, MarshalAs(UnmanagedType.LPTStr)] string url)
         {
+
             using (var httpClient = new HttpClient())
             {
-                var response = httpClient.GetStringAsync(new Uri(url)).Result;
+                try
+                {
+                    var response = httpClient.GetStringAsync(new Uri(url)).Result;
 
-                return response;
+                    return response;
+                }
+                catch(Exception e)
+                {
+                    return e.Message;
+                }
             }
         }
 
@@ -45,10 +53,17 @@ namespace Cyrus.Mql5
         {
             using (var httpClient = new HttpClient())
             {
+                try
+                {
+                    var response = httpClient.PostAsync(new Uri(url), new StringContent(data));
 
-               var response = httpClient.PostAsync(new Uri(url), new StringContent(data));
-
-               return response.Result.Content.ReadAsStringAsync().Result;
+                    return response.Result.Content.ReadAsStringAsync().Result;
+                }
+                catch(Exception e)
+                {
+                    return e.Message;
+                }
+              
             }
         }
     }
